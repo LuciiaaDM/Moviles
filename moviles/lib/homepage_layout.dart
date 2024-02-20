@@ -27,7 +27,7 @@ class HomePageLayout extends StatelessWidget {
         title: Center(
           child: Text(
             pageTitle.toUpperCase(), // Convertir a mayúsculas
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 28.0,
               fontWeight: FontWeight.bold, // Texto en negrita
             ),
@@ -61,7 +61,7 @@ class HomePageLayout extends StatelessWidget {
         backgroundColor: Colors.grey[300], // Fondo gris
         selectedItemColor: Colors.grey, // Íconos seleccionados en gris
         unselectedItemColor: Colors.grey, // Íconos no seleccionados en gris
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 40.0), // Icono más grande
             label: 'Home',
@@ -79,7 +79,7 @@ class HomePageLayout extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.message, size: 40.0), // Icono más grande
-            label: 'Messages',
+            label: 'Chats',
             // Tamaño del texto aumentado
           ),
           BottomNavigationBarItem(

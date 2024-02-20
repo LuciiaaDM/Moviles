@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:moviles/domain/entities/post.dart'; // Asegúrate de importar la clase Post desde el archivo correcto
+import 'package:moviles/domain/entities/post.dart'; 
+import 'package:moviles/message_page.dart'; 
 
 class PostDetailPage extends StatelessWidget {
-  final Post post; // El post seleccionado que se mostrará en detalle
+  final Post post;
+  final String username;
 
-  const PostDetailPage({super.key, required this.post});
+  const PostDetailPage({
+    Key? key,
+    required this.post,
+    required this.username,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post Detail'),
+        backgroundColor: Colors.lightBlue[100], // Fondo de la barra superior azul
+        title: const Text(
+          'POST DETAIL', // Título en mayúsculas
+          style: TextStyle(
+            fontWeight: FontWeight.bold, // Negrita
+            fontSize: 28, // Tamaño de fuente más grande
+          ),
+        ),
+        centerTitle: true, // Centrar el título
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,27 +36,78 @@ class PostDetailPage extends StatelessWidget {
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text('Type: ${post.type}'),
-            Text('Country: ${post.country}'),
-            Text('City: ${post.city}'),
-            Text('Text: ${post.text}'),
+            Text(
+              'Author: ${post.author}',
+              style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
+            ),
+            Text(
+              'Type: ${post.type}',
+              style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
+            ),
+            Text(
+              'Country: ${post.country}',
+              style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
+            ),
+            Text(
+              'City: ${post.city}',
+              style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
+            ),
             if (post.type == 'Educational')
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  Text('University: ${post.university}'),
-                  Text('Campus: ${post.campus}'),
+                  Text(
+                    'University: ${post.university}',
+                    style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
+                  ),
+                  Text(
+                    'Campus: ${post.campus}',
+                    style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
+                  ),
                 ],
               ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Aquí puedes implementar la lógica para contactar al usuario que publicó el post
-                // Puedes abrir un formulario de contacto o iniciar una conversación de chat con el usuario.
-              },
-              child: const Text('Contact User'),
+            Text(
+              'Text: ${post.text}',
+              style: const TextStyle(fontSize: 18), // Aumentar el tamaño de fuente
             ),
+            const SizedBox(height: 20),
+            if (post.author != username)
+              ElevatedButton(
+                onPressed: () {
+                  /*FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(username)
+                    .collection('messages')
+                    .doc(post.author)
+                    .collection('conversation')
+                    .add({
+                      'sender': username,
+                      'content': "Hi, I'm $username",
+                      'timestamp': Timestamp.now(),
+                    });
+                  FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(post.author)
+                    .collection('messages')
+                    .doc(username)
+                    .collection('conversation')
+                    .add({
+                      'sender': username,
+                      'content': "Hi, I'm $username",
+                      'timestamp': Timestamp.now(),
+                    }); */
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MessagePage(
+                        currentUsername: username,
+                        otherUsername: post.author,// Mensaje inicial al contactar al usuario
+                      ),
+                    ),
+                  );
+                },
+                child: const Text('Contact User'),
+              ),
           ],
         ),
       ),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:moviles/domain/entities/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:logger/logger.dart';
+import 'package:moviles/domain/entities/user.dart'; // Import the User class
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import the Cloud Firestore library
+import 'package:logger/logger.dart'; // Import the Logger library
 
 class SignUp extends StatelessWidget {
+  // Text editing controllers for various input fields
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -12,13 +13,13 @@ class SignUp extends StatelessWidget {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController universityController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController birthdayController = TextEditingController(); // Nueva variable de controlador para la fecha de nacimiento
+  final TextEditingController birthdayController = TextEditingController(); // New controller variable for birthday
   final TextEditingController cityErasmusController = TextEditingController();
   final TextEditingController countryErasmusController = TextEditingController();
   final TextEditingController universityErasmusController = TextEditingController();
   final TextEditingController campusErasmusController = TextEditingController();
 
-  final Logger logger = Logger();
+  final Logger logger = Logger(); // Logger instance for logging messages
 
   SignUp({Key? key});
 
@@ -26,16 +27,17 @@ class SignUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up Users'),
+        title: const Text('SIGN UP USERS'),
       ),
       body: Container(
-        color: Colors.lightBlue[100], // Fondo azul claro
+        color: Colors.lightBlue[100], // Light blue background color
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Input fields for user registration
                 TextFormField(
                   controller: userNameController,
                   decoration: const InputDecoration(labelText: 'Username'),
@@ -81,8 +83,8 @@ class SignUp extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  controller: birthdayController, // Utiliza el controlador de fecha de nacimiento
-                  keyboardType: TextInputType.datetime, // Define el tipo de teclado como fecha y hora
+                  controller: birthdayController, // Use the birthday controller
+                  keyboardType: TextInputType.datetime, // Set the keyboard type as date and time
                   decoration: const InputDecoration(labelText: 'Birthday (YYYY-MM-DD)'),
                 ),
                 const SizedBox(height: 10),
@@ -106,13 +108,15 @@ class SignUp extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'Erasmus Campus (Optional)'),
                 ),
                 const SizedBox(height: 10),
+                // Button to sign up a new user
                 ElevatedButton(
                   onPressed: () async {
+                    // Check if passwords match
                     if (passwordController.text == confirmPasswordController.text) {
-                      // Parsea la fecha de nacimiento
+                      // Parse the birthday
                       DateTime? birthday = DateTime.tryParse(birthdayController.text);
                       if (birthday != null) {
-                        // Convierte la fecha de nacimiento a un Timestamp para almacenarla en Firestore
+                        // Convert the birthday to a Timestamp to store it in Firestore
                         Timestamp birthdayTimestamp = Timestamp.fromDate(birthday);
                         User newUser = User(
                           userName: userNameController.text,
@@ -122,7 +126,7 @@ class SignUp extends StatelessWidget {
                           city: cityController.text,
                           university: universityController.text,
                           phoneNumber: phoneNumberController.text,
-                          birthday: birthdayTimestamp, // Almacena la fecha como Timestamp en Firestore
+                          birthday: birthdayTimestamp, // Store the birthday as a Timestamp in Firestore
                           cityErasmus: cityErasmusController.text,
                           countryErasmus: countryErasmusController.text,
                           universityErasmus: universityErasmusController.text,
@@ -130,6 +134,7 @@ class SignUp extends StatelessWidget {
                         );
                         bool result = await signUp(newUser);
                         if (!result) {
+                          // Show error dialog if username already exists
                           if (!context.mounted) return;
                           showDialog(
                             context: context,
@@ -158,7 +163,7 @@ class SignUp extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    Navigator.pop(context); // Regresa a la pantalla de inicio de sesión
+                                    Navigator.pop(context); // Return to the login screen
                                   },
                                   child: const Text('OK'),
                                 ),
@@ -215,7 +220,9 @@ class SignUp extends StatelessWidget {
 
   Future<bool> signUp(User user) async {
     try {
+      // Get the reference to the 'Users' collection in Firestore
       CollectionReference usersCollection = FirebaseFirestore.instance.collection('Users');
+      // Check if the user already exists
       QuerySnapshot userExists = await usersCollection.where('username', isEqualTo: user.userName).get();
       if (userExists.docs.isNotEmpty) {
         return false;
@@ -223,17 +230,17 @@ class SignUp extends StatelessWidget {
 
       DocumentReference newUserDoc = usersCollection.doc(user.userName);
       
-      // Crea las colecciones de mensajes y publicaciones
-      //CollectionReference messagesCollection = 
-      //newUserDoc.collection('messages');
-      //CollectionReference postsCollection = 
-      //newUserDoc.collection('posts');
+      // Create message and post collections if necessary
+      // CollectionReference messagesCollection = 
+      // newUserDoc.collection('messages');
+      // CollectionReference postsCollection = 
+      // newUserDoc.collection('posts');
       
-      // Agrega documentos a las colecciones si es necesario
-      //messagesCollection.add({});
-      //postsCollection.add({});
+      // Add documents to collections if necessary
+      // messagesCollection.add({});
+      // postsCollection.add({});
 
-      // Guarda los datos del usuario en Firestore
+      // Save user data to Firestore
       await newUserDoc.set({
         'username': user.userName,
         'password': user.password,
@@ -251,6 +258,7 @@ class SignUp extends StatelessWidget {
 
       return true;
     } catch (error) {
+      // Log any errors that occur during the sign-up process
       logger.e('Something is wrong: $error');
       return false;
     }

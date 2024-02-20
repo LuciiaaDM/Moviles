@@ -1,19 +1,21 @@
 class Post {
-  final String title;
-  final String type; // general, educational, lifestyle
-  final String country;
-  final String city;
-  final String text;
-  final String university; // Solo necesario para posts de tipo educational
-  final String campus; // Solo necesario para posts de tipo educational
+  final String author; // Author of the post
+  final String title; // Title of the post
+  final String type; // Type of the post (general, educational, lifestyle)
+  final String country; // Country associated with the post
+  final String city; // City associated with the post
+  final String text; // Text content of the post
+  final String university; // University associated with the post
+  final String campus; // Campus associated with the post
 
   Post({
+    required this.author,
     required this.title,
     required this.type,
     required this.country,
     required this.city,
     required this.text,
-    this.university = '', // Valor predeterminado para evitar errores si no es un post educativo
-    this.campus = '', // Valor predeterminado para evitar errores si no es un post educativo
+    required this.university,
+    required this.campus,
   });
 }

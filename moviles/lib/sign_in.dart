@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
-import 'sign_up.dart'; // Importa la pantalla de registro
-import 'home_page.dart'; // Importa la pantalla homePage
+import 'sign_up.dart';
+import 'home_page.dart';
 
 class SignIn extends StatelessWidget {
   final TextEditingController userNameController = TextEditingController();
@@ -15,27 +15,32 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign In'),        
-        automaticallyImplyLeading: false,  
+        title: const Text('SIGN IN'),
+        backgroundColor: Colors.lightBlue[100], // Fondo azul claro
+        automaticallyImplyLeading: false,
       ),
       body: Container(
-        color: Colors.lightBlue[100], // Fondo azul claro
+        color: Colors.lightBlue[100], // Light blue background color
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Image.asset(
+                'assets/logo.png', 
+                height: 150,
+                width: 150,
+                fit: BoxFit.contain,
+              ),
               TextFormField(
                 controller: userNameController,
                 decoration: const InputDecoration(labelText: 'Username'),
               ),
-              const SizedBox(height: 10),
               TextFormField(
                 controller: passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(labelText: 'Password'),
               ),
-              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
                   if (userNameController.text.isNotEmpty &&
@@ -43,13 +48,13 @@ class SignIn extends StatelessWidget {
                     bool isAuthenticated = await authenticateUser(
                         userNameController.text, passwordController.text, context);
                     if (isAuthenticated) {
-                      if(!context.mounted) return;
+                      if (!context.mounted) return;
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage(username: userNameController.text)),
                       );
                     } else {
-                      if(!context.mounted) return;
+                      if (!context.mounted) return;
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
